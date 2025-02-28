@@ -1,5 +1,5 @@
 import Grimpan from "./grimpan.js";
 function main() {
-    Grimpan.getInstance();
+    Grimpan.getInstance().initialize();
 }
 main();
