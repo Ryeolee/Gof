@@ -7,19 +7,21 @@
  *
  */
 class Grimpan {
-    static instance;
-    constructor(canvas) {
-        if (!canvas || !(canvas instanceof HTMLCanvasElement)) {
-            throw new Error("canvas 엘리먼트를 입력하세요");
-        }
+  static instance;
+  constructor(canvas) {
+    if (!canvas || !(canvas instanceof HTMLCanvasElement)) {
+      throw new Error("canvas 엘리먼트를 입력하세요");
     }
-    initialize() { }
-    initializeMenu() { }
-    static getInstance() {
-        if (!this.instance) {
-            this.instance = new Grimpan(document.querySelector("#canvas"));
-        }
-        return this.instance;
+  }
+  initialize() {}
+  initializeMenu() {}
+
+  // 인스턴스 생성, 인스턴스 한 개 유지 ---> 역할이 두 개 있음  --> 단일 책임 원칙 x
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new Grimpan(document.querySelector("#canvas"));
     }
+    return this.instance;
+  }
 }
 export default Grimpan;
