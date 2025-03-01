@@ -1,3 +1,4 @@
+import AbstractGrimpanFactory from "./AbstractGrimpanFactory.js";
 import ChromeGrimpan from "./ChromeGrimpan.js";
 import IEGrimpan from "./IEGrimpan.js";
 
@@ -11,9 +12,25 @@ function grimpanFactory(type: string) {
     throw new Error("에러");
   }
 }
+
+class ChromeGrimpanFactory extends AbstractGrimpanFactory {
+  static override createGrimpan() {
+    return ChromeGrimpan.getInstance();
+  }
+}
+
+class IEGrimpanFactory extends AbstractGrimpanFactory {
+  static override createGrimpan() {
+    return IEGrimpan.getInstance();
+  }
+}
+
 function main() {
-  grimpanFactory("ie");
-  grimpanFactory("chrome");
+  // grimpanFactory("ie");
+  // grimpanFactory("chrome");
+  const grimpan = ChromeGrimpanFactory.createGrimpan();
+  grimpan.initialize();
+  grimpan.initializeMenu();
 }
 
 main();
