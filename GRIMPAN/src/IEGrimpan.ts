@@ -4,7 +4,6 @@ class IEGrimpan extends Grimpan {
   protected static override instance: IEGrimpan;
 
   initialize() {}
-  initializeMenu() {}
 
   static override getInstance() {
     if (!this.instance) {
