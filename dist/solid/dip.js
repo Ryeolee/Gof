@@ -4,8 +4,11 @@ function main(instance) {
     instance.initialize();
 }
 main(Grimpan.getInstance());
+class IObj {
+}
 class Obj {
 }
+// 인터페이스를 타입으로 지정.
 class A {
     constructor(obj) { }
     setObj(obj) { }

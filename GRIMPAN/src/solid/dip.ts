@@ -7,11 +7,13 @@ function main(instance: any) {
 
 main(Grimpan.getInstance());
 
-class Obj {}
+class IObj {}
+class Obj implements IObj {}
 
+// 인터페이스를 타입으로 지정.
 class A {
-  constructor(obj?: Obj) {}
-  setObj(obj: Obj) {}
+  constructor(obj?: IObj) {}
+  setObj(obj: IObj) {}
 }
 
 // 생성자 의존성 주입
