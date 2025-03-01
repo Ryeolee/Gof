@@ -1,46 +1,80 @@
-"use strict";
-class GrimpanMenuBtn {
+class GrimpanMenuElementBuilder {
+    btn;
+    constructor() { }
+    build() {
+        return this.btn;
+    }
+}
+class GrimpanMenuElement {
+    menu;
     name;
-    type;
-    onClick;
-    onChange;
-    active;
-    value;
-    constructor(name, type, onClick, onChange, active, value) {
+    constructor(menu, name) {
+        this.menu = menu;
         this.name = name;
-        this.type = type;
-        this.onClick = onClick;
+    }
+}
+export class GrimpanMenuInput extends GrimpanMenuElement {
+    onChange;
+    value;
+    constructor(menu, name, onChange, value) {
+        super(menu, name);
         this.onChange = onChange;
-        this.active = active;
         this.value = value;
     }
-    static Builder = class GrimpanMenuBtnBuilder {
-        btn;
-        constructor(name, type) {
-            this.btn = new GrimpanMenuBtn(name, type);
+    draw() {
+        const btn = document.createElement("input");
+        btn.type = "color";
+        btn.title = this.name;
+        if (this.onChange) {
+            btn.addEventListener("change", this.onChange.bind(this));
         }
-        setOnClick(onClick) {
-            this.btn.onClick = onClick;
-            return this;
+        this.menu.dom.append(btn);
+    }
+    static Builder = class GrimpanMenuInputBuild extends GrimpanMenuElementBuilder {
+        btn;
+        constructor(menu, name) {
+            super();
+            this.btn = new GrimpanMenuInput(menu, name);
         }
         setOnChange(onChange) {
             this.btn.onChange = onChange;
-            return this;
-        }
-        setActive(active) {
-            this.btn.active = active;
             return this;
         }
         setValue(value) {
             this.btn.value = value;
             return this;
         }
-        build() {
-            return this.btn;
+    };
+}
+export class GrimpanMenuBtn extends GrimpanMenuElement {
+    onClick;
+    active;
+    constructor(menu, name, onClick, active) {
+        super(menu, name);
+        this.active = active;
+        this.onClick = onClick;
+    }
+    draw() {
+        const btn = document.createElement("button");
+        btn.textContent = this.name;
+        if (this.onClick) {
+            btn.addEventListener("click", this.onClick.bind(this));
+        }
+        this.menu.dom.append(btn);
+    }
+    static Builder = class GrimpanMenuBtnBuilder extends GrimpanMenuElementBuilder {
+        btn;
+        constructor(menu, name) {
+            super();
+            this.btn = new GrimpanMenuBtn(menu, name);
+        }
+        setOnClick(onClick) {
+            this.btn.onClick = onClick;
+            return this;
+        }
+        setActive(active) {
+            this.btn.active = active;
+            return this;
         }
     };
 }
-// 필수 변수, 미필수를 구분할 수 있고, build()를 통해 객체 완성을 알 수 있다.
-const backBtn = new GrimpanMenuBtn.Builder("뒤로", "back")
-    .setActive(true)
-    .build();

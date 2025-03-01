@@ -8,7 +8,7 @@ export abstract class AbstractGrimpanFactory {
   static createGrimpan() {
     throw new Error("하위클래스에서 구현");
   }
-  static createGrimpanMenu(grimpan: Grimpan) {
+  static createGrimpanMenu(grimpan: Grimpan, dom: HTMLElement) {
     throw new Error("하위클래스에서 구현");
   }
 
@@ -22,8 +22,8 @@ export class ChromeGrimpanFactory extends AbstractGrimpanFactory {
     return ChromeGrimpan.getInstance();
   }
 
-  static override createGrimpanMenu(grimpan: ChromeGrimpan) {
-    return ChromeGrimpanMenu.getInstance(grimpan);
+  static override createGrimpanMenu(grimpan: ChromeGrimpan, dom: HTMLElement) {
+    return ChromeGrimpanMenu.getInstance(grimpan, dom);
   }
 
   static override createGrimpanHistory(grimpan: ChromeGrimpan) {
@@ -36,8 +36,8 @@ export class IEGrimpanFactory extends AbstractGrimpanFactory {
     return IEGrimpan.getInstance();
   }
 
-  static override createGrimpanMenu(grimpan: IEGrimpan) {
-    return IEGrimpanMenu.getInstance(grimpan);
+  static override createGrimpanMenu(grimpan: IEGrimpan, dom: HTMLElement) {
+    return IEGrimpanMenu.getInstance(grimpan, dom);
   }
 
   static override createGrimpanHistory(grimpan: IEGrimpan) {
