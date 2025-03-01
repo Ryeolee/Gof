@@ -53,6 +53,7 @@ class GrimpanMenuBtn {
   };
 }
 
+// 필수 변수, 미필수를 구분할 수 있고, build()를 통해 객체 완성을 알 수 있다.
 const backBtn = new GrimpanMenuBtn.Builder("뒤로", "back")
   .setActive(true)
   .build();
