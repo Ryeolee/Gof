@@ -14,13 +14,9 @@ class Bird extends Animal {
     }
 }
 class Penguin extends Bird {
-    // 리스코프 치환의 원칙을 어김.
-    fly() {
-        throw new Error("못 날아");
-    }
 }
-console.log(new Animal().isAnimal());
-// 부모 클래스 Bird에서 자식 클래스 Penguin으로 바꿨을 때, 에러가 남. -> 리스코프 치환 법칙을 어김.
-console.log(new Bird().fly().at(1));
-console.log(new Penguin().fly().at(1));
-console.log(new Penguin().fly());
+// console.log(new Animal().isAnimal());
+// // 부모 클래스 Bird에서 자식 클래스 Penguin으로 바꿨을 때, 에러가 남. -> 리스코프 치환 법칙을 어김.
+// console.log(new Bird().fly().at(1));
+// console.log(new Penguin().fly().at(1));
+// console.log(new Penguin().fly());
