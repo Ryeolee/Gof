@@ -1,25 +1,62 @@
-/**
- * 하나의 인스턴스를 사용함. 메모리 낭비를 줄일 수 있음.
- * 단점
- * 1. 강한 결합을 하게 됨.
- * 2. 생성자가 private이라서 단위 테스트가 힘듦
- * 3. getInstance()함수가 단일 책임의 원칙을 어김. -> 바뀜 이유가 한가지여야한다. ex) 다른 형식의 그림판을 만들고 싶을 경우 #canvas가 다른 형식으로 만들어질 수 있음.
- *
- */
-class Grimpan {
-    static instance;
-    constructor(canvas) {
+import { BackCommand, ForwardCommand } from "./commands/index.js";
+import { ChromeGrimpanFactory, IEGrimpanFactory, } from "./GrimpanFactory.js";
+export class Grimpan {
+    canvas;
+    ctx;
+    history;
+    menu;
+    mode;
+    constructor(canvas, factory) {
         if (!canvas || !(canvas instanceof HTMLCanvasElement)) {
             throw new Error("canvas 엘리먼트를 입력하세요");
         }
+        this.canvas = canvas;
+        this.ctx = this.canvas.getContext("2d");
     }
-    initialize() { }
-    initializeMenu() { }
+    setMode(mode) {
+        console.log("mode change", mode);
+        this.mode = mode;
+    }
+    static getInstance() { }
+}
+export class ChromeGrimpan extends Grimpan {
+    static instance;
+    menu;
+    history;
+    constructor(canvas, factory) {
+        super(canvas, factory);
+        this.menu = factory.createGrimpanMenu(this, document.querySelector("#menu"));
+        this.history = factory.createGrimpanHistory(this);
+    }
+    initialize(option) {
+        this.menu.initialize(option.menu);
+        this.history.initialize();
+        window.addEventListener("keyup", (e) => {
+            console.log(e);
+            if (e.code === "KeyZ" && e.ctrlKey && e.shiftKey) {
+                this.menu.executeCommand(new ForwardCommand(this.history));
+                return;
+            }
+            if (e.code === "KeyZ" && e.ctrlKey) {
+                this.menu.executeCommand(new BackCommand(this.history));
+                return;
+            }
+        });
+    }
     static getInstance() {
         if (!this.instance) {
-            this.instance = new Grimpan(document.querySelector("#canvas"));
+            this.instance = new ChromeGrimpan(document.querySelector("canvas"), ChromeGrimpanFactory);
         }
         return this.instance;
     }
 }
-export default Grimpan;
+export class IEGrimpan extends Grimpan {
+    static instance;
+    initialize() { }
+    static getInstance() {
+        if (!this.instance) {
+            this.instance = new IEGrimpan(document.querySelector("canvas"), IEGrimpanFactory);
+        }
+        return this.instance;
+    }
+}

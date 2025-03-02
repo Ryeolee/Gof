@@ -1,4 +1,3 @@
-import { ChromeGrimpanFactory } from "./GrimpanFactory.js";
 // 단일 책임 원칙을 어김.
 // function grimpanFactory(type: string) {
 //   if (type === "ie") {
@@ -9,23 +8,40 @@ import { ChromeGrimpanFactory } from "./GrimpanFactory.js";
 //     throw new Error("에러");
 //   }
 // }
+import { ChromeGrimpanFactory } from "./GrimpanFactory.js";
 function main() {
     const factory = ChromeGrimpanFactory;
     const grimpan = factory.createGrimpan();
-    const grimpanMenu = factory.createGrimpanMenu(grimpan, document.querySelector("#menu"));
-    const grimpanHistory = factory.createGrimpanHistory(grimpan);
-    grimpan.initialize();
-    grimpanMenu.initialize([
-        "back",
-        "forward",
-        "color",
-        "pipette",
-        "pen",
-        "circle",
-        "rectangle",
-        "eraser",
-        "save",
-    ]);
-    grimpanHistory.initialize();
+    // const grimpanMenu = factory.createGrimpanMenu(
+    //   grimpan,
+    //   document.querySelector("#menu")!
+    // );
+    // const grimpanHistory = factory.createGrimpanHistory(grimpan);
+    // grimpan.initialize();
+    // grimpanMenu.initialize([
+    // "back",
+    // "forward",
+    // "color",
+    // "pipette",
+    // "pen",
+    // "circle",
+    // "rectangle",
+    // "eraser",
+    // "save",
+    // ]);
+    // grimpanHistory.initialize();
+    grimpan.initialize({
+        menu: [
+            "back",
+            "forward",
+            "color",
+            "pipette",
+            "pen",
+            "circle",
+            "rectangle",
+            "eraser",
+            "save",
+        ],
+    });
 }
 main();
