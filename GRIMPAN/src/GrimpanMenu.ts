@@ -118,6 +118,7 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
             // 앞으로가기 작업
           })
           .build();
+        console.log(btn);
         btn.draw();
         return btn;
       }
