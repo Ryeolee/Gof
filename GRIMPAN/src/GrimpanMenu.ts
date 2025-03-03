@@ -58,7 +58,10 @@ export class IEGrimpanMenu extends GrimpanMenu {
 
 export class ChromeGrimpanMenu extends GrimpanMenu {
   private static instance: ChromeGrimpanMenu;
-  override initialize(types: BtnType[]): void {}
+  override initialize(types: BtnType[]): void {
+    types.forEach(this.drawButtonByType.bind(this));
+    this.setActiveBtn("pen");
+  }
 
   static override getInstance(
     grimpan: ChromeGrimpan,
@@ -167,6 +170,8 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
         btn.draw();
         return btn;
       }
+      default:
+        throw new Error(`알 수 없는 타입 ${type}`);
     }
   }
 }
