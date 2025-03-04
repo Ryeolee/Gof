@@ -1,5 +1,5 @@
 import { GrimpanMenuBtn, GrimpanMenuInput } from "./GrimpanMenuBtn.js";
-import { BackCommand, PenSelectCommand, PipetteSelectCommand, RectangleSelectCommand, } from "./commands/index.js";
+import { BackCommand, PenSelectCommand, PipetteSelectCommand, RectangleSelectCommand, SaveCommand, } from "./commands/index.js";
 export class GrimpanMenu {
     grimpan;
     dom;
@@ -40,6 +40,9 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
             this.instance = new ChromeGrimpanMenu(grimpan, dom);
         }
         return this.instance;
+    }
+    onSave() {
+        this.executeCommand(new SaveCommand(this.grimpan));
     }
     onClickBack() {
         this.executeCommand(new BackCommand(this.grimpan.history));
@@ -130,7 +133,9 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
                 return btn;
             }
             case "save": {
-                const btn = new GrimpanMenuBtn.Builder(this, "저장", type).build();
+                const btn = new GrimpanMenuBtn.Builder(this, "저장", type)
+                    .setOnClick(this.onSave.bind(this))
+                    .build();
                 btn.draw();
                 return btn;
             }

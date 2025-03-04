@@ -8,6 +8,7 @@ import {
   PenSelectCommand,
   PipetteSelectCommand,
   RectangleSelectCommand,
+  SaveCommand,
 } from "./commands/index.js";
 
 export type BtnType =
@@ -75,6 +76,10 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
       this.instance = new ChromeGrimpanMenu(grimpan, dom);
     }
     return this.instance;
+  }
+
+  onSave() {
+    this.executeCommand(new SaveCommand(this.grimpan));
   }
 
   onClickBack() {
@@ -172,7 +177,9 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
         return btn;
       }
       case "save": {
-        const btn = new GrimpanMenuBtn.Builder(this, "저장", type).build();
+        const btn = new GrimpanMenuBtn.Builder(this, "저장", type)
+          .setOnClick(this.onSave.bind(this))
+          .build();
         btn.draw();
         return btn;
       }
