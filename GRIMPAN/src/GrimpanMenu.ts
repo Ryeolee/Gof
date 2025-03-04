@@ -24,6 +24,7 @@ export type BtnType =
 export abstract class GrimpanMenu {
   grimpan: Grimpan;
   dom: HTMLElement;
+  colorBtn!: HTMLInputElement;
   protected constructor(grimpan: Grimpan, dom: HTMLElement) {
     this.grimpan = grimpan;
     this.dom = dom;
@@ -37,7 +38,10 @@ export abstract class GrimpanMenu {
   setActiveBtn(type: GrimpanMode) {
     document.querySelector(".active")?.classList.remove("active");
     document.querySelector(`#${type}-btn`)?.classList.add("active");
-    this.grimpan.setMode(type);
+  }
+
+  executeCommand(command: Command) {
+    command.execute();
   }
 }
 
@@ -60,7 +64,7 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
   private static instance: ChromeGrimpanMenu;
   override initialize(types: BtnType[]): void {
     types.forEach(this.drawButtonByType.bind(this));
-    this.setActiveBtn("pen");
+    this.grimpan.setMode("pen");
   }
 
   static override getInstance(
@@ -73,11 +77,6 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
     return this.instance;
   }
 
-  // invoker
-  executeCommand(command: Command) {
-    command.execute();
-  }
-
   onClickBack() {
     this.executeCommand(new BackCommand(this.grimpan.history));
   }
@@ -88,19 +87,23 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
   }
 
   onClickEraser() {
-    this.executeCommand(new EraserSelectCommand(this.grimpan));
+    //this.executeCommand(new EraserSelectCommand(this.grimpan));
+    this.grimpan.setMode("eraser");
   }
 
   onClickCircle() {
-    this.executeCommand(new CircleSelectCommand(this.grimpan));
+    // this.executeCommand(new CircleSelectCommand(this.grimpan));
+    this.grimpan.setMode("circle");
   }
 
   onClickRectangle() {
     this.executeCommand(new RectangleSelectCommand(this.grimpan));
+    this.grimpan.setMode("rectangle");
   }
 
   onClickPipette() {
     this.executeCommand(new PipetteSelectCommand(this.grimpan));
+    this.grimpan.setMode("pipette");
   }
 
   drawButtonByType(type: BtnType) {
@@ -124,8 +127,10 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
       }
       case "color": {
         const btn = new GrimpanMenuInput.Builder(this, "컬러", type)
-          .setOnChange(() => {
-            // 컬러 변경 작업
+          .setOnChange((e: Event) => {
+            if (e.target) {
+              this.grimpan.setColor((e.target as HTMLInputElement).value);
+            }
           })
           .build();
         btn.draw();
