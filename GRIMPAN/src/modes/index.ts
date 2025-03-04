@@ -28,6 +28,7 @@ export abstract class Mode {
 }
 
 export class PenMode extends Mode {
+  // Grimpan이라는 객체와 연관이 있음. 이는 곧 Grimpan의 상태를 변환시킬 수 있다는 것이므로 상태패턴
   constructor(grimpan: Grimpan) {
     super(grimpan);
     grimpan.menu.executeCommand(new PenSelectCommand(grimpan));
@@ -105,6 +106,7 @@ export class PipetteMode extends Mode {
   }
 
   override mouseup(e: MouseEvent): void {
+    // 함수를 통해 grimpan의 상태를 변화시킴.
     this.grimpan.setMode("pen");
   }
 }
