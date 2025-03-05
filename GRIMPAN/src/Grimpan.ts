@@ -20,7 +20,7 @@ import {
   PipetteMode,
   RectangleMode,
 } from "./modes/index.js";
-import { SaveCompleteObserver } from "./Observer.js";
+import { SaveCompleteObserver, SubscriptionManager } from "./Observer.js";
 
 export interface GrimpanOption {
   menu: BtnType[];
@@ -40,7 +40,6 @@ export abstract class Grimpan {
     grayscale: false,
     invert: false,
   };
-  saveCompleteObserver: SaveCompleteObserver;
 
   protected constructor(
     canvas: HTMLElement | null,
@@ -54,7 +53,7 @@ export abstract class Grimpan {
     this.color = "#000";
     this.active = false;
     this.setSaveStrategy("png");
-    this.saveCompleteObserver = new SaveCompleteObserver();
+    SubscriptionManager.getInstance().addEvent("saveComplete");
   }
 
   setSaveStrategy(imageType: "png" | "jpg" | "webp" | "avif" | "gif" | "pdf") {
@@ -103,7 +102,7 @@ export abstract class Grimpan {
           a.href = url;
           a.click();
           // 로직 완료 시 구독 객체들에게 알림.
-          this.saveCompleteObserver.publish();
+          SubscriptionManager.getInstance().publish("saveComplete");
 
           // .then(() => {
           //   const a = document.createElement("a");

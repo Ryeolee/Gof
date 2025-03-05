@@ -1,4 +1,5 @@
 import { ChromeGrimpan, Grimpan, IEGrimpan } from "./Grimpan.js";
+import { SubscriptionManager } from "./Observer.js";
 
 interface Clonable {
   clone(): Clonable;
@@ -16,7 +17,7 @@ export abstract class GrimpanHistory {
     this.grimpan = grimpan;
     this.stack = new HistoryStack();
     // 인스턴스 생성 시 구독
-    this.grimpan.saveCompleteObserver.subscribe({
+    SubscriptionManager.getInstance().subscribe("saveComplete", {
       name: "history",
       publish: this.afterSaveComplete.bind(this),
     });
@@ -26,7 +27,7 @@ export abstract class GrimpanHistory {
   }
 
   cancelSaveCompleteAlarm() {
-    this.grimpan.saveCompleteObserver.unsubscrive("history");
+    SubscriptionManager.getInstance().unsubscrive("saveComplete", "history");
   }
 
   getStack() {

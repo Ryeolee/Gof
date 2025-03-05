@@ -4,6 +4,7 @@ import {
   GrimpanMenuInput,
   GrimpanMenuSaveBtn,
 } from "./GrimpanMenuBtn.js";
+import { SubscriptionManager } from "./Observer.js";
 import {
   BackCommand,
   CircleSelectCommand,
@@ -34,7 +35,7 @@ export abstract class GrimpanMenu {
     this.grimpan = grimpan;
     this.dom = dom;
     // 인스턴스 생성 시 구독
-    this.grimpan.saveCompleteObserver.subscribe({
+    SubscriptionManager.getInstance().subscribe("saveComplete", {
       name: "menu",
       publish: this.afterSaveComplete.bind(this),
     });
