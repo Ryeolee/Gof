@@ -20,6 +20,7 @@ import {
   PipetteMode,
   RectangleMode,
 } from "./modes/index.js";
+import { SaveCompleteObserver } from "./Observer.js";
 
 export interface GrimpanOption {
   menu: BtnType[];
@@ -39,6 +40,7 @@ export abstract class Grimpan {
     grayscale: false,
     invert: false,
   };
+  saveCompleteObserver: SaveCompleteObserver;
 
   protected constructor(
     canvas: HTMLElement | null,
@@ -52,6 +54,7 @@ export abstract class Grimpan {
     this.color = "#000";
     this.active = false;
     this.setSaveStrategy("png");
+    this.saveCompleteObserver = new SaveCompleteObserver();
   }
 
   setSaveStrategy(imageType: "png" | "jpg" | "webp" | "avif" | "gif" | "pdf") {
@@ -99,6 +102,8 @@ export abstract class Grimpan {
           );
           a.href = url;
           a.click();
+          // 로직 완료 시 구독 객체들에게 알림.
+          this.saveCompleteObserver.publish();
 
           // .then(() => {
           //   const a = document.createElement("a");
@@ -234,7 +239,6 @@ export class ChromeGrimpan extends Grimpan {
     this.menu.initialize(option.menu);
     this.history.initialize();
     window.addEventListener("keyup", (e: KeyboardEvent) => {
-      console.log(e);
       if (e.code === "KeyZ" && e.ctrlKey && e.shiftKey) {
         this.menu.executeCommand(new ForwardCommand(this.history));
         return;
@@ -244,7 +248,6 @@ export class ChromeGrimpan extends Grimpan {
         return;
       }
     });
-    console.log(this);
     this.canvas.addEventListener("mousedown", this.onMousedown.bind(this));
     this.canvas.addEventListener("mousemove", this.onMousemove.bind(this));
     this.canvas.addEventListener("mouseup", this.onMouseup.bind(this));

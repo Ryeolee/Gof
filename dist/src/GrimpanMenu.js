@@ -7,6 +7,14 @@ export class GrimpanMenu {
     constructor(grimpan, dom) {
         this.grimpan = grimpan;
         this.dom = dom;
+        // 인스턴스 생성 시 구독
+        this.grimpan.saveCompleteObserver.subscribe({
+            name: "menu",
+            publish: this.afterSaveComplete.bind(this),
+        });
+    }
+    afterSaveComplete() {
+        console.log("menu: save complete");
     }
     static getInstance(grimpan, dom) {
         throw new Error("Method not implemented.");
@@ -81,7 +89,6 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
                     // 앞으로가기 작업
                 })
                     .build();
-                console.log(btn);
                 btn.draw();
                 return btn;
             }

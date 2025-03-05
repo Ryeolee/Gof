@@ -33,6 +33,15 @@ export abstract class GrimpanMenu {
   protected constructor(grimpan: Grimpan, dom: HTMLElement) {
     this.grimpan = grimpan;
     this.dom = dom;
+    // 인스턴스 생성 시 구독
+    this.grimpan.saveCompleteObserver.subscribe({
+      name: "menu",
+      publish: this.afterSaveComplete.bind(this),
+    });
+  }
+
+  afterSaveComplete() {
+    console.log("menu: save complete");
   }
 
   abstract initialize(types: BtnType[]): void;
@@ -129,7 +138,6 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
             // 앞으로가기 작업
           })
           .build();
-        console.log(btn);
         btn.draw();
         return btn;
       }
