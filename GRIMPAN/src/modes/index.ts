@@ -68,6 +68,7 @@ export class EraserMode extends Mode {
     this.grimpan.active = true;
     this.grimpan.ctx.lineWidth = 10;
     this.grimpan.ctx.lineCap = "round";
+    this.grimpan.ctx.filter = "blur(4px)";
     this.grimpan.ctx.strokeStyle = "#000";
     this.grimpan.ctx.globalCompositeOperation = "destination-out";
     this.grimpan.ctx.beginPath();

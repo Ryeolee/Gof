@@ -91,8 +91,7 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
   }
 
   onClickPen() {
-    const command = new PenSelectCommand(this.grimpan);
-    this.grimpan.history.stack.push(command);
+    this.grimpan.setMode("pen");
   }
 
   onClickEraser() {
@@ -189,12 +188,12 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
                 (e.target as HTMLInputElement)!.checked;
             },
             grayscale: (e: Event) => {
-              this.grimpan.saveSetting.blur = (
+              this.grimpan.saveSetting.grayscale = (
                 e.target as HTMLInputElement
               )?.checked;
             },
             invert: (e: Event) => {
-              this.grimpan.saveSetting.blur = (
+              this.grimpan.saveSetting.invert = (
                 e.target as HTMLInputElement
               )?.checked;
             },

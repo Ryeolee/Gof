@@ -1,4 +1,5 @@
 import { BackCommand, ForwardCommand } from "./commands/index.js";
+import { BlurFilter, DefaultFilter, GrayscaleFilter, InvertFilter, } from "./filter/index.js";
 import { ChromeGrimpanFactory, IEGrimpanFactory, } from "./GrimpanFactory.js";
 import { CircleMode, EraserMode, PenMode, PipetteMode, RectangleMode, } from "./modes/index.js";
 export class Grimpan {
@@ -23,23 +24,78 @@ export class Grimpan {
         this.ctx = this.canvas.getContext("2d");
         this.color = "#000";
         this.active = false;
-        this.setSaveStrategy("webp");
+        this.setSaveStrategy("png");
     }
     setSaveStrategy(imageType) {
         switch (imageType) {
             case "png":
                 // 인자가 없으므로 상태 변화를 할 수 없음. 스트레티지 전략
-                this.saveStrategy = () => {
+                this.saveStrategy = async () => {
+                    let imageData = this.ctx.getImageData(0, 0, 300, 300);
+                    const offscreenCanvas = new OffscreenCanvas(300, 300);
+                    const offscreenContext = offscreenCanvas.getContext("2d");
+                    offscreenContext.putImageData(imageData, 0, 0);
+                    // 아래 코드 ==> 각 역할별로 클래스를 나누어. 조건이 할당될 경우 연쇄를 위해 filter에 값을 넣는다.
+                    const df = new DefaultFilter();
+                    let filter = df;
+                    if (this.saveSetting.blur) {
+                        const bf = new BlurFilter();
+                        filter = filter.setNext(bf);
+                    }
+                    if (this.saveSetting.grayscale) {
+                        const gf = new GrayscaleFilter();
+                        filter = filter.setNext(gf);
+                    }
+                    if (this.saveSetting.invert) {
+                        const ivf = new InvertFilter();
+                        filter = filter.setNext(ivf);
+                    }
+                    await df.handle(offscreenCanvas);
                     const a = document.createElement("a");
                     a.download = "canvas.png";
-                    const dataURL = this.canvas.toDataURL("image/png");
+                    const blob = await offscreenCanvas.convertToBlob();
+                    const dataURL = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.addEventListener("load", () => {
+                            resolve(reader.result);
+                        });
+                        reader.addEventListener("error", reject);
+                        reader.readAsDataURL(blob);
+                    });
+                    //  console.log("dataURL", dataURL);
                     let url = dataURL.replace(/^data:image\/png/, "data:application/octet-stream");
                     a.href = url;
                     a.click();
+                    // .then(() => {
+                    //   const a = document.createElement("a");
+                    //   a.download = "canvas.png";
+                    //   offscreenCanvas
+                    //     .convertToBlob()
+                    //     .then((blob) => {
+                    //       const reader = new FileReader();
+                    //       reader.addEventListener("load", () => {
+                    //         const dataURL = reader.result as string;
+                    //         console.log("dataURL", dataURL);
+                    //         let url = dataURL.replace(
+                    //           /^data:image\/png/,
+                    //           "data:application/octet-stream"
+                    //         );
+                    //         a.href = url;
+                    //         a.click();
+                    //       });
+                    //       reader.readAsDataURL(blob);
+                    //     });
+                    // });
                 };
                 break;
             case "jpg":
                 this.saveStrategy = () => {
+                    if (this.saveSetting.blur) {
+                    }
+                    if (this.saveSetting.grayscale) {
+                    }
+                    if (this.saveSetting.invert) {
+                    }
                     const a = document.createElement("a");
                     a.download = "canvas.jpg";
                     const dataURL = this.canvas.toDataURL("image/jpeg");
@@ -50,6 +106,12 @@ export class Grimpan {
                 break;
             case "webp":
                 this.saveStrategy = () => {
+                    if (this.saveSetting.blur) {
+                    }
+                    if (this.saveSetting.grayscale) {
+                    }
+                    if (this.saveSetting.invert) {
+                    }
                     const a = document.createElement("a");
                     a.download = "canvas.webp";
                     const dataURL = this.canvas.toDataURL("image/webp");

@@ -14,6 +14,7 @@ class GrimpanMenuElement {
         this.name = name;
         this.type = type;
     }
+    // 상속을 통해 부모의 로직과 자식의 로직을 함수화하여 커스텀해 템플릿 메소드를 구현
     draw() {
         const btn = this.createButton();
         this.appendBeforeBtn();
@@ -114,8 +115,8 @@ export class GrimpanMenuSaveBtn extends GrimpanMenuBtn {
     }
     appendBeforeBtn() {
         this.drawInput("블러", this.onClickBlur);
-        this.drawInput("반전", this.onClickGrayscale);
-        this.drawInput("흑백", this.onClickInvert);
+        this.drawInput("흑백", this.onClickGrayscale);
+        this.drawInput("반전", this.onClickInvert);
     }
     drawInput(title, onChange) {
         const input = document.createElement("input");
