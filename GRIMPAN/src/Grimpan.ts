@@ -1,4 +1,4 @@
-import { BackCommand, ForwardCommand } from "./commands/index.js";
+import { BackCommand, Command, ForwardCommand } from "./commands/index.js";
 import {
   BlurFilter,
   DefaultFilter,
@@ -54,6 +54,15 @@ export abstract class Grimpan {
     this.active = false;
     this.setSaveStrategy("png");
     SubscriptionManager.getInstance().addEvent("saveComplete");
+  }
+
+  makeSnapshot() {
+    const snapshot = {
+      color: this.color,
+      mode: this.mode,
+      data: this.canvas.toDataURL("image/png"),
+    };
+    return Object.freeze(snapshot);
   }
 
   setSaveStrategy(imageType: "png" | "jpg" | "webp" | "avif" | "gif" | "pdf") {
@@ -198,6 +207,10 @@ export abstract class Grimpan {
     }
   }
 
+  invoke(command: Command) {
+    command.execute();
+  }
+
   setColor(color: string) {
     this.color = color;
   }
@@ -207,6 +220,21 @@ export abstract class Grimpan {
     if (this.menu.colorBtn) {
       this.menu.colorBtn.value = color;
     }
+  }
+
+  resetState() {
+    this.color = "#fff";
+    this.mode = new PenMode(this);
+    this.ctx.clearRect(0, 0, 300, 300);
+  }
+
+  restore(history: { mode: Mode; color: string; data: string }) {
+    const img = new Image();
+    img.addEventListener("load", () => {
+      this.ctx.clearRect(0, 0, 300, 300);
+      this.ctx.drawImage(img, 0, 0, 300, 300);
+    });
+    img.src = history.data;
   }
 
   abstract initialize(option: GrimpanOption): void;

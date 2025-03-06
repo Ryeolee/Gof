@@ -28,6 +28,14 @@ export class Grimpan {
         this.setSaveStrategy("png");
         SubscriptionManager.getInstance().addEvent("saveComplete");
     }
+    makeSnapshot() {
+        const snapshot = {
+            color: this.color,
+            mode: this.mode,
+            data: this.canvas.toDataURL("image/png"),
+        };
+        return Object.freeze(snapshot);
+    }
     setSaveStrategy(imageType) {
         switch (imageType) {
             case "png":
@@ -155,6 +163,9 @@ export class Grimpan {
                 break;
         }
     }
+    invoke(command) {
+        command.execute();
+    }
     setColor(color) {
         this.color = color;
     }
@@ -163,6 +174,19 @@ export class Grimpan {
         if (this.menu.colorBtn) {
             this.menu.colorBtn.value = color;
         }
+    }
+    resetState() {
+        this.color = "#fff";
+        this.mode = new PenMode(this);
+        this.ctx.clearRect(0, 0, 300, 300);
+    }
+    restore(history) {
+        const img = new Image();
+        img.addEventListener("load", () => {
+            this.ctx.clearRect(0, 0, 300, 300);
+            this.ctx.drawImage(img, 0, 0, 300, 300);
+        });
+        img.src = history.data;
     }
     static getInstance() { }
 }

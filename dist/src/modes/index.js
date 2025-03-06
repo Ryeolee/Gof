@@ -1,4 +1,4 @@
-import { CircleSelectCommand, EraserSelectCommand, PenSelectCommand, PipetteSelectCommand, RectangleSelectCommand, } from "../commands/index.js";
+import { CircleSelectCommand, EraserSelectCommand, PenSelectCommand, PipetteSelectCommand, RectangleSelectCommand, SaveHistoryCommand, } from "../commands/index.js";
 const convertToHex = (color) => {
     if (color < 0) {
         return 0;
@@ -16,6 +16,9 @@ export class Mode {
     grimpan;
     constructor(grimpan) {
         this.grimpan = grimpan;
+    }
+    invoke(command) {
+        command.execute();
     }
 }
 export class PenMode extends Mode {
@@ -42,6 +45,9 @@ export class PenMode extends Mode {
         this.grimpan.ctx.moveTo(e.offsetX, e.offsetY);
     }
     mouseup(e) {
+        if (this.grimpan.active) {
+            this.invoke(new SaveHistoryCommand(this.grimpan));
+        }
         this.grimpan.active = false;
     }
 }
@@ -69,6 +75,9 @@ export class EraserMode extends Mode {
         this.grimpan.ctx.moveTo(e.offsetX, e.offsetY);
     }
     mouseup(e) {
+        if (this.grimpan.active) {
+            this.invoke(new SaveHistoryCommand(this.grimpan));
+        }
         this.grimpan.active = false;
     }
 }
@@ -97,16 +106,30 @@ export class RectangleMode extends Mode {
         super(grimpan);
         grimpan.menu.executeCommand(new RectangleSelectCommand(grimpan));
     }
-    mousedown(e) { }
+    mousedown(e) {
+        this.grimpan.active = true;
+    }
     mousemove(e) { }
-    mouseup(e) { }
+    mouseup(e) {
+        if (this.grimpan.active) {
+            this.invoke(new SaveHistoryCommand(this.grimpan));
+        }
+        this.grimpan.active = false;
+    }
 }
 export class CircleMode extends Mode {
     constructor(grimpan) {
         super(grimpan);
         grimpan.menu.executeCommand(new CircleSelectCommand(grimpan));
     }
-    mousedown(e) { }
+    mousedown(e) {
+        this.grimpan.active = true;
+    }
     mousemove(e) { }
-    mouseup(e) { }
+    mouseup(e) {
+        if (this.grimpan.active) {
+            this.invoke(new SaveHistoryCommand(this.grimpan));
+        }
+        this.grimpan.active = false;
+    }
 }

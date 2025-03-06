@@ -10,10 +10,12 @@ import {
   CircleSelectCommand,
   Command,
   EraserSelectCommand,
+  ForwardCommand,
   PenSelectCommand,
   PipetteSelectCommand,
   RectangleSelectCommand,
   SaveCommand,
+  SaveHistoryCommand,
 } from "./commands/index.js";
 
 export type BtnType =
@@ -80,6 +82,7 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
   override initialize(types: BtnType[]): void {
     types.forEach(this.drawButtonByType.bind(this));
     this.grimpan.setMode("pen");
+    this.executeCommand(new SaveHistoryCommand(this.grimpan));
   }
 
   static override getInstance(
@@ -90,6 +93,10 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
       this.instance = new ChromeGrimpanMenu(grimpan, dom);
     }
     return this.instance;
+  }
+
+  onClickForward() {
+    this.executeCommand(new ForwardCommand(this.grimpan.history));
   }
 
   onSave() {
@@ -135,9 +142,7 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
       }
       case "forward": {
         const btn = new GrimpanMenuBtn.Builder(this, "앞으로", type)
-          .setOnClick(() => {
-            // 앞으로가기 작업
-          })
+          .setOnClick(this.onClickForward.bind(this))
           .build();
         btn.draw();
         return btn;
