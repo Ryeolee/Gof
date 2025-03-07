@@ -32,7 +32,7 @@ export class BackCommand extends Command {
     this.history.undo(); // receiver에게 로직 전송
   }
 }
-
+// 어댑터  패턴
 //new Invoker(new BackCommand({} as any).execute()).invoker();
 //new Invoker(new Adaptor(new BackCommand({} as any))).invoker();
 
