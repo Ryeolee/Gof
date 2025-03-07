@@ -1,6 +1,22 @@
 import { Grimpan } from "../Grimpan.js";
 import { GrimpanHistory } from "../GrimpanHistory.js";
 
+// export class Invoker {
+//   constructor(private readonly command: { run(): void }) {}
+
+//   invoker() {
+//     this.command.run();
+//   }
+// }
+
+// export class Adaptor {
+//   constructor(private readonly command: Command) {}
+
+//   run() {
+//     this.command.execute();
+//   }
+// }
+
 export abstract class Command {
   abstract execute(): void;
 }
@@ -16,6 +32,10 @@ export class BackCommand extends Command {
     this.history.undo(); // receiver에게 로직 전송
   }
 }
+
+//new Invoker(new BackCommand({} as any).execute()).invoker();
+//new Invoker(new Adaptor(new BackCommand({} as any))).invoker();
+
 export class ForwardCommand extends Command {
   name = "forward";
 
