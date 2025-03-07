@@ -24,6 +24,32 @@ export abstract class Command {
 
 export const counter: { [key: string]: number } = {};
 
+// function countMixin(value: typeof BackCommand, context: ClassDecoratorContext) {
+//   return class extends value {
+//     override execute(): void {
+//       super.execute();
+//       if (counter[this.name]) {
+//         counter[this.name]++;
+//       } else {
+//         counter[this.name] = 1;
+//       }
+//     }
+//     addtional() {}
+//   };
+// }
+
+// function loggerMixin(
+//   value: typeof BackCommand,
+//   context: ClassDecoratorContext
+// ) {
+//   return class extends value {
+//     override execute() {
+//       super.execute();
+//     }
+//     showLogger() {}
+//   };
+// }
+
 // abstract class CommandDecorator {
 //   name: string;
 //   constructor(protected readonly command: Command) {
@@ -51,6 +77,8 @@ export const counter: { [key: string]: number } = {};
 //   }
 // }
 
+// @countMixin
+// @loggerMixin
 export class BackCommand extends Command {
   name = "back";
 
