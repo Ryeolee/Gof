@@ -18,7 +18,37 @@ import { GrimpanHistory } from "../GrimpanHistory.js";
 // }
 
 export abstract class Command {
+  abstract name: string;
   abstract execute(): void;
+}
+
+export const counter: { [key: string]: number } = {};
+
+abstract class CommandDecorator {
+  name: string;
+  constructor(protected readonly command: Command) {
+    this.name = this.command.name;
+  }
+  abstract execute(): void;
+}
+
+class ExecuteLogger extends CommandDecorator {
+  override execute(): void {
+    console.log(this.command.name + "명령을 실행");
+    this.command.execute();
+  }
+  showLogger() {}
+}
+
+class ExecuteCounter extends CommandDecorator {
+  override execute(): void {
+    this.command.execute();
+    if (counter[this.command.name]) {
+      counter[this.command.name]++;
+    } else {
+      counter[this.command.name] = 1;
+    }
+  }
 }
 
 export class BackCommand extends Command {
@@ -35,6 +65,10 @@ export class BackCommand extends Command {
 // 어댑터  패턴
 //new Invoker(new BackCommand({} as any).execute()).invoker();
 //new Invoker(new Adaptor(new BackCommand({} as any))).invoker();
+
+// 데코레이터 패턴
+new ExecuteCounter(new ExecuteLogger(new BackCommand({} as any))).execute();
+new ExecuteLogger(new ExecuteCounter(new BackCommand({} as any))).execute();
 
 export class ForwardCommand extends Command {
   name = "forward";
