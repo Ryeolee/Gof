@@ -12,6 +12,10 @@ import { ChromeGrimpanFactory } from "./GrimpanFactory.js";
 function main() {
     const factory = ChromeGrimpanFactory;
     const grimpan = factory.createGrimpan();
+    // const menu = new GrimpanMenu()
+    // const grimpan1= new ChromeGrimpan(menu)
+    // const grimpan2= new ChromeGrimpan(menu)
+    // const grimpan3= new ChromeGrimpan(menu)
     // const grimpanMenu = factory.createGrimpanMenu(
     //   grimpan,
     //   document.querySelector("#menu")!
