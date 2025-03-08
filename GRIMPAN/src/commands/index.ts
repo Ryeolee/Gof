@@ -146,11 +146,37 @@ export class EraserSelectCommand extends Command {
   }
 }
 
+interface SelectCommand {
+  grimpan: Grimpan;
+  name: string;
+  execute(): void;
+}
+
+export class PremiumCommandProxy {
+  name: string;
+  constructor(private readonly command: SelectCommand) {
+    this.name = command.name;
+  }
+
+  execute(): void {
+    if (this.command.grimpan.isPremium) {
+      this.command.execute();
+    } else {
+      alert("프리미엄 이용자만 가능합니다.");
+    }
+  }
+}
+
 export class CircleSelectCommand extends Command {
   name = "circleSelect";
+  loaded = false;
 
-  constructor(private grimpan: Grimpan) {
+  constructor(public grimpan: Grimpan) {
     super();
+  }
+
+  load() {
+    this.loaded = true;
   }
 
   override execute(): void {
@@ -160,13 +186,18 @@ export class CircleSelectCommand extends Command {
 
 export class RectangleSelectCommand extends Command {
   name = "rectangleSelect";
+  loaded = false;
 
-  constructor(private grimpan: Grimpan) {
+  constructor(public grimpan: Grimpan) {
     super();
   }
 
   override execute(): void {
     this.grimpan.menu.setActiveBtn("rectangle");
+  }
+
+  load() {
+    this.loaded = true;
   }
 }
 
