@@ -24,6 +24,7 @@ export class GrimpanMenu {
     }
     setActiveBtn(type) {
         document.querySelector(".active")?.classList.remove("active");
+        console.log(type);
         document.querySelector(`#${type}-btn`)?.classList.add("active");
     }
     executeCommand(command) {

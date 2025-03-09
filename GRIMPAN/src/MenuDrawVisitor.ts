@@ -14,7 +14,8 @@ export class ChromeMenuDrawVisitor extends MenuDrawVisitor {
   override drawBtn(btn: GrimpanMenuBtn): HTMLButtonElement {
     const btnElement = document.createElement("button");
     btnElement.textContent = btn.name;
-    btnElement.id = `${btn.type}=btn`;
+    console.log(btn.type);
+    btnElement.id = `${btn.type}-btn`;
     if (btn.onClick) {
       btnElement.addEventListener("click", btn.onClick.bind(btn));
     }

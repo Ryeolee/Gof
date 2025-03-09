@@ -56,6 +56,7 @@ export abstract class GrimpanMenu {
 
   setActiveBtn(type: GrimpanMode) {
     document.querySelector(".active")?.classList.remove("active");
+    console.log(type);
     document.querySelector(`#${type}-btn`)?.classList.add("active");
   }
 
@@ -152,7 +153,6 @@ export class ChromeGrimpanMenu extends GrimpanMenu {
         const btn = new GrimpanMenuBtn.Builder(this, "뒤로", type)
           .setOnClick(this.onClickBack.bind(this))
           .build();
-
         return btn;
       }
       case "forward": {
